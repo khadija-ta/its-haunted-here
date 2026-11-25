@@ -6,7 +6,7 @@ const CARTO_KEY = import.meta.env.VITE_CARTO_KEY
 const KEY_PARAM = CARTO_KEY ? `?key=${encodeURIComponent(CARTO_KEY)}` : ''
 // "@2x" = CARTO's high-resolution (retina) tiles, so text stays sharp
 const BASE = `https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png${KEY_PARAM}`
-const LABELS = `https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}@2x.png${KEY_PARAM}`
+const LABELS = `https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}@2x.png${KEY_PARAM}`
 
 // Pin look: shape + color, never color alone (styles live in index.css)
 function pinIcon(pin) {

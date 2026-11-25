@@ -62,8 +62,8 @@ button { font: inherit; cursor: pointer; }
 .search input::placeholder { color: var(--muted); }
 
 /* Map readability: roads a little brighter, street names much brighter */
-.tiles-base { filter: brightness(1.35) contrast(1.1); }
-.tiles-labels { filter: brightness(2.6) contrast(1.15); }
+.tiles-base { filter: brightness(1.6) contrast(1.1); }
+.tiles-labels { filter: invert(1) sepia(0.3) brightness(0.95); }
 
 /* Pins: shape + color */
 .pin { box-sizing: border-box; }
