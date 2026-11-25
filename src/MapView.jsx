@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import L from 'leaflet'
-import { CITIES, PLACEHOLDER_PINS } from './fakeData.js'
+import { CITIES, PLACEHOLDER_STORIES, STORY_TYPES } from './fakeData.js'
 
 const CARTO_KEY = import.meta.env.VITE_CARTO_KEY
 const KEY_PARAM = CARTO_KEY ? `?key=${encodeURIComponent(CARTO_KEY)}` : ''
@@ -28,9 +28,13 @@ function pinIcon(pin) {
   })
 }
 
-export default function MapView({ cityKey }) {
+export default function MapView({ cityKey, onSelect }) {
   const mapEl = useRef(null)
   const map = useRef(null)
+  const onSelectRef = useRef(onSelect)
+  useEffect(() => {
+    onSelectRef.current = onSelect
+  }, [onSelect])
 
   // Create the map once
   useEffect(() => {
@@ -46,8 +50,11 @@ export default function MapView({ cityKey }) {
       .addAttribution('© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions">CARTO</a>')
       .addTo(m)
 
-    PLACEHOLDER_PINS.forEach((pin) => {
-      L.marker(pin.position, { icon: pinIcon(pin), title: pin.title, alt: pin.title }).addTo(m)
+    PLACEHOLDER_STORIES.forEach((pin) => {
+      const name = `${STORY_TYPES[pin.type].label}: ${pin.titleLead}${pin.place}`
+      L.marker(pin.position, { icon: pinIcon(pin), title: name, alt: name })
+        .on('click', () => onSelectRef.current?.(pin.id))
+        .addTo(m)
     })
     const first = CITIES[cityKey]
     m.setView(first.center, first.zoom)

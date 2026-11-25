@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import MapView from './MapView.jsx'
-import { CITIES } from './fakeData.js'
+import StorySheet from './StorySheet.jsx'
+import { CITIES, PLACEHOLDER_STORIES } from './fakeData.js'
 
 function Logo() {
   return (
@@ -41,10 +42,15 @@ function TabBar() {
 
 export default function App() {
   const [cityKey, setCityKey] = useState('ann-arbor')
+  const [selectedId, setSelectedId] = useState(null)
+  // Fake, on-screen-only reactions (nothing is saved yet)
+  const [reactions, setReactions] = useState({})
+  const story = PLACEHOLDER_STORIES.find((s) => s.id === selectedId)
+  const closeSheet = useCallback(() => setSelectedId(null), [])
 
   return (
     <div className="app">
-      <MapView cityKey={cityKey} />
+      <MapView cityKey={cityKey} onSelect={setSelectedId} />
 
       <header className="top">
         <Logo />
@@ -65,6 +71,15 @@ export default function App() {
       <button className="locate" aria-label="Show my location">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><circle cx="12" cy="12" r="7.5" /><path d="M12 2v3m0 14v3M2 12h3m14 0h3" /></svg>
       </button>
+      {story && (
+        <StorySheet
+          key={story.id}
+          story={story}
+          state={reactions[story.id] ?? {}}
+          onChange={(patch) => setReactions((r) => ({ ...r, [story.id]: { ...r[story.id], ...patch } }))}
+          onClose={closeSheet}
+        />
+      )}
       <TabBar />
     </div>
   )
