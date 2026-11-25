@@ -3,9 +3,10 @@ import L from 'leaflet'
 import { CITIES, PLACEHOLDER_PINS } from './fakeData.js'
 
 const CARTO_KEY = import.meta.env.VITE_CARTO_KEY
-const TILES =
-  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' +
-  (CARTO_KEY ? `?key=${encodeURIComponent(CARTO_KEY)}` : '')
+const KEY_PARAM = CARTO_KEY ? `?key=${encodeURIComponent(CARTO_KEY)}` : ''
+// "@2x" = CARTO's high-resolution (retina) tiles, so text stays sharp
+const BASE = `https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png${KEY_PARAM}`
+const LABELS = `https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}@2x.png${KEY_PARAM}`
 
 // Pin look: shape + color, never color alone (styles live in index.css)
 function pinIcon(pin) {
@@ -34,10 +35,12 @@ export default function MapView({ cityKey }) {
   // Create the map once
   useEffect(() => {
     const m = L.map(mapEl.current, { zoomControl: false, attributionControl: false })
-    L.tileLayer(TILES, {
-      subdomains: 'abcd',
-      maxZoom: 20,
-    }).addTo(m)
+    // Layer 1: dark map with no text (roads and land), slightly brightened
+    L.tileLayer(BASE, { subdomains: 'abcd', maxZoom: 20, className: 'tiles-base' }).addTo(m)
+    // Layer 2: street names only, in its own pane above the map but below the pins
+    m.createPane('labels').style.zIndex = 250
+    m.getPane('labels').style.pointerEvents = 'none'
+    L.tileLayer(LABELS, { subdomains: 'abcd', maxZoom: 20, pane: 'labels', className: 'tiles-labels' }).addTo(m)
     L.control
       .attribution({ position: 'bottomleft', prefix: false })
       .addAttribution('© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions">CARTO</a>')
