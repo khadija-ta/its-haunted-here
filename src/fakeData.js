@@ -2,10 +2,15 @@
 // Replace with Khadija's own stories later.
 // Types: 'folklore' | 'encounter' | 'legend'
 
+// `bounds` = rough box around each city: [[south, west], [north, east]].
+// Stories can only be pinned inside it.
 export const CITIES = {
-  'ann-arbor': { name: 'Ann Arbor', center: [42.2808, -83.743], zoom: 16 },
-  lahore: { name: 'Lahore', center: [31.5700, 74.3310], zoom: 16 }, // between the Walled City and Mall Road
+  'ann-arbor': { name: 'Ann Arbor', center: [42.2808, -83.743], zoom: 16, bounds: [[42.22, -83.8], [42.325, -83.67]] },
+  lahore: { name: 'Lahore', center: [31.5700, 74.3310], zoom: 16, bounds: [[31.38, 74.2], [31.64, 74.48]] }, // center is between the Walled City and Mall Road
 }
+
+export const PLACE_TYPES = ['Old tree', 'Graveyard', 'Haveli / old house', 'Historic site', 'Campus', 'Restaurant / shop', 'Street / road', 'Other']
+export const TIMES_OF_DAY = ['Dawn', 'Morning', 'Afternoon', 'Dusk', 'Evening', 'Night', 'Middle of the night']
 
 export const STORY_TYPES = {
   folklore: { label: 'Local folklore' },
@@ -32,6 +37,14 @@ export const TAGS = {
   figure: { label: 'A figure' },
   animals: { label: 'Animals acting strange' },
 }
+
+// Tag groups, in the order they appear on the Post form
+export const TAG_GROUPS = [
+  { label: 'Sounds', ids: ['whispers', 'footsteps', 'voice', 'knocking', 'laughter'] },
+  { label: 'Body', ids: ['cold', 'touch', 'pressed', 'watched'] },
+  { label: 'Surroundings', ids: ['moving', 'doors', 'lights', 'food', 'smell'] },
+  { label: 'Sightings', ids: ['figure', 'animals'] },
+]
 
 export const PLACEHOLDER_STORIES = [
   // Ann Arbor
